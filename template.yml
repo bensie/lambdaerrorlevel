@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Architectures: [arm64]
+    AutoPublishAlias: Live
+    Handler: bootstrap
+    LoggingConfig:
+      ApplicationLogLevel: !Ref ApplicationLogLevelParameter
+      LogFormat: JSON
+      SystemLogLevel: !Ref SystemLogLevelParameter
+    MemorySize: 128
+    Runtime: provided.al2023
+    Timeout: 10
+Parameters:
+  ApplicationLogLevelParameter:
+    Type: String
+    Description: |
+      Choose the log level for application logs that are sent to CloudWatch
+      Logs.
+    Default: INFO
+    AllowedValues:
+      - DEBUG
+      - INFO
+      - WARN
+      - ERROR
+  SystemLogLevelParameter:
+    Type: String
+    Description: |
+      Choose the log level for Lambda system-generated logs that are sent to
+      CloudWatch Logs.
+    Default: INFO
+    AllowedValues:
+      - DEBUG
+      - INFO
+      - WARN
+Resources:
+  LogMeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./bin/logme
